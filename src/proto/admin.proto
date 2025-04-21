@@ -1,0 +1,398 @@
+syntax = "proto3";
+
+package admin;
+
+service AdminService {
+  // Authentication
+  rpc Login (LoginRequest) returns (LoginResponse) {}
+
+  // Deals Management
+  rpc GetDeals (GetDealsRequest) returns (GetDealsResponse) {}
+  rpc GetDealById (GetDealByIdRequest) returns (GetDealByIdResponse) {}
+  rpc UpdateDealStatus (UpdateDealStatusRequest) returns (UpdateDealStatusResponse) {}
+
+  // Disputes Management
+  rpc GetDisputes (GetDisputesRequest) returns (GetDisputesResponse) {}
+  rpc GetDisputeById (GetDisputeByIdRequest) returns (GetDisputeByIdResponse) {}
+  rpc ResolveDispute (ResolveDisputeRequest) returns (ResolveDisputeResponse) {}
+
+  // Commission Management
+  rpc GetCommissionSettings (GetCommissionSettingsRequest) returns (GetCommissionSettingsResponse) {}
+  rpc UpdateCommissionSettings (UpdateCommissionSettingsRequest) returns (UpdateCommissionSettingsResponse) {}
+  rpc GetCommissionBalance (GetCommissionBalanceRequest) returns (GetCommissionBalanceResponse) {}
+  rpc WithdrawCommission (WithdrawCommissionRequest) returns (WithdrawCommissionResponse) {}
+
+  // Market Configuration
+  rpc GetFiatCurrencies (GetFiatCurrenciesRequest) returns (GetFiatCurrenciesResponse) {}
+  rpc UpdateFiatCurrency (UpdateFiatCurrencyRequest) returns (UpdateFiatCurrencyResponse) {}
+  rpc GetPaymentMethods (GetPaymentMethodsRequest) returns (GetPaymentMethodsResponse) {}
+  rpc UpdatePaymentMethod (UpdatePaymentMethodRequest) returns (UpdatePaymentMethodResponse) {}
+  rpc GetCategories (GetCategoriesRequest) returns (GetCategoriesResponse) {}
+  rpc UpdateCategory (UpdateCategoryRequest) returns (UpdateCategoryResponse) {}
+
+  // Exchanger Management
+  rpc GetExchangers (GetExchangersRequest) returns (GetExchangersResponse) {}
+  rpc GetExchangerById (GetExchangerByIdRequest) returns (GetExchangerByIdResponse) {}
+  rpc UpdateExchangerStatus (UpdateExchangerStatusRequest) returns (UpdateExchangerStatusResponse) {}
+  rpc CloseExchangerAds (CloseExchangerAdsRequest) returns (CloseExchangerAdsResponse) {}
+
+  // Automation Settings
+  rpc GetAutomationSettings (GetAutomationSettingsRequest) returns (GetAutomationSettingsResponse) {}
+  rpc UpdateAutomationSettings (UpdateAutomationSettingsRequest) returns (UpdateAutomationSettingsResponse) {}
+
+  // Logs
+  rpc GetAdminLogs (GetAdminLogsRequest) returns (GetAdminLogsResponse) {}
+  rpc GetUserLogs (GetUserLogsRequest) returns (GetUserLogsResponse) {}
+}
+
+// Authentication
+message LoginRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  string token = 1;
+  Admin admin = 2;
+}
+
+message Admin {
+  string id = 1;
+  string username = 2;
+  string role = 3;
+  string status = 4;
+  string created_at = 5;
+  string updated_at = 6;
+}
+
+// Deals Management
+message GetDealsRequest {
+  int32 page = 1;
+  int32 limit = 2;
+  string status = 3;
+  string exchanger_id = 4;
+  string user_id = 5;
+  string start_date = 6;
+  string end_date = 7;
+}
+
+message GetDealsResponse {
+  repeated Deal deals = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 limit = 4;
+}
+
+message GetDealByIdRequest {
+  string deal_id = 1;
+}
+
+message GetDealByIdResponse {
+  Deal deal = 1;
+}
+
+message UpdateDealStatusRequest {
+  string deal_id = 1;
+  string status = 2;
+  string reason = 3;
+}
+
+message UpdateDealStatusResponse {
+  Deal deal = 1;
+}
+
+message Deal {
+  string id = 1;
+  string exchanger_id = 2;
+  string user_id = 3;
+  string status = 4;
+  double amount = 5;
+  string currency = 6;
+  string payment_method = 7;
+  string created_at = 8;
+  string updated_at = 9;
+}
+
+// Disputes Management
+message GetDisputesRequest {
+  int32 page = 1;
+  int32 limit = 2;
+  string status = 3;
+  string deal_id = 4;
+  string start_date = 5;
+  string end_date = 6;
+}
+
+message GetDisputesResponse {
+  repeated Dispute disputes = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 limit = 4;
+}
+
+message GetDisputeByIdRequest {
+  string dispute_id = 1;
+}
+
+message GetDisputeByIdResponse {
+  Dispute dispute = 1;
+}
+
+message ResolveDisputeRequest {
+  string dispute_id = 1;
+  string resolution = 2;
+  string comment = 3;
+}
+
+message ResolveDisputeResponse {
+  Dispute dispute = 1;
+}
+
+message Dispute {
+  string id = 1;
+  string deal_id = 2;
+  string status = 3;
+  string reason = 4;
+  string resolution = 5;
+  string comment = 6;
+  string created_at = 7;
+  string updated_at = 8;
+}
+
+// Commission Management
+message GetCommissionSettingsRequest {}
+
+message GetCommissionSettingsResponse {
+  CommissionSettings settings = 1;
+}
+
+message UpdateCommissionSettingsRequest {
+  CommissionSettings settings = 1;
+}
+
+message UpdateCommissionSettingsResponse {
+  CommissionSettings settings = 1;
+}
+
+message GetCommissionBalanceRequest {}
+
+message GetCommissionBalanceResponse {
+  double balance = 1;
+  string currency = 2;
+}
+
+message WithdrawCommissionRequest {
+  double amount = 1;
+  string reason = 2;
+}
+
+message WithdrawCommissionResponse {
+  string transaction_id = 1;
+  double amount = 2;
+  string currency = 3;
+  string status = 4;
+  string created_at = 5;
+}
+
+message CommissionSettings {
+  double rate = 1;
+  double min_amount = 2;
+  double max_amount = 3;
+  string currency = 4;
+  bool is_active = 5;
+}
+
+// Market Configuration
+message GetFiatCurrenciesRequest {}
+
+message GetFiatCurrenciesResponse {
+  repeated FiatCurrency currencies = 1;
+}
+
+message UpdateFiatCurrencyRequest {
+  FiatCurrency currency = 1;
+}
+
+message UpdateFiatCurrencyResponse {
+  FiatCurrency currency = 1;
+}
+
+message FiatCurrency {
+  string code = 1;
+  string name = 2;
+  string symbol = 3;
+  bool is_active = 4;
+  double min_amount = 5;
+  double max_amount = 6;
+}
+
+message GetPaymentMethodsRequest {}
+
+message GetPaymentMethodsResponse {
+  repeated PaymentMethod methods = 1;
+}
+
+message UpdatePaymentMethodRequest {
+  PaymentMethod method = 1;
+}
+
+message UpdatePaymentMethodResponse {
+  PaymentMethod method = 1;
+}
+
+message PaymentMethod {
+  string id = 1;
+  string name = 2;
+  string type = 3;
+  bool is_active = 4;
+  double min_amount = 5;
+  double max_amount = 6;
+  string currency = 7;
+}
+
+message GetCategoriesRequest {}
+
+message GetCategoriesResponse {
+  repeated Category categories = 1;
+}
+
+message UpdateCategoryRequest {
+  Category category = 1;
+}
+
+message UpdateCategoryResponse {
+  Category category = 1;
+}
+
+message Category {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  bool is_active = 4;
+}
+
+// Exchanger Management
+message GetExchangersRequest {
+  int32 page = 1;
+  int32 limit = 2;
+  string status = 3;
+  string start_date = 4;
+  string end_date = 5;
+}
+
+message GetExchangersResponse {
+  repeated Exchanger exchangers = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 limit = 4;
+}
+
+message GetExchangerByIdRequest {
+  string exchanger_id = 1;
+}
+
+message GetExchangerByIdResponse {
+  Exchanger exchanger = 1;
+}
+
+message UpdateExchangerStatusRequest {
+  string exchanger_id = 1;
+  string status = 2;
+  string reason = 3;
+}
+
+message UpdateExchangerStatusResponse {
+  Exchanger exchanger = 1;
+}
+
+message CloseExchangerAdsRequest {
+  string exchanger_id = 1;
+  string reason = 2;
+}
+
+message CloseExchangerAdsResponse {
+  Exchanger exchanger = 1;
+}
+
+message Exchanger {
+  string id = 1;
+  string user_id = 2;
+  string status = 3;
+  string name = 4;
+  string description = 5;
+  string created_at = 6;
+  string updated_at = 7;
+}
+
+// Automation Settings
+message GetAutomationSettingsRequest {}
+
+message GetAutomationSettingsResponse {
+  AutomationSettings settings = 1;
+}
+
+message UpdateAutomationSettingsRequest {
+  AutomationSettings settings = 1;
+}
+
+message UpdateAutomationSettingsResponse {
+  AutomationSettings settings = 1;
+}
+
+message AutomationSettings {
+  bool auto_approve_deals = 1;
+  bool auto_approve_exchangers = 2;
+  bool auto_resolve_disputes = 3;
+  int32 dispute_resolution_time = 4;
+  int32 deal_expiration_time = 5;
+  int32 exchanger_verification_time = 6;
+}
+
+// Logs
+message GetAdminLogsRequest {
+  int32 page = 1;
+  int32 limit = 2;
+  string admin_id = 3;
+  string action = 4;
+  string start_date = 5;
+  string end_date = 6;
+}
+
+message GetAdminLogsResponse {
+  repeated AdminLog logs = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 limit = 4;
+}
+
+message GetUserLogsRequest {
+  int32 page = 1;
+  int32 limit = 2;
+  string user_id = 3;
+  string action = 4;
+  string start_date = 5;
+  string end_date = 6;
+}
+
+message GetUserLogsResponse {
+  repeated UserLog logs = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 limit = 4;
+}
+
+message AdminLog {
+  string id = 1;
+  string admin_id = 2;
+  string action = 3;
+  string details = 4;
+  string created_at = 5;
+}
+
+message UserLog {
+  string id = 1;
+  string user_id = 2;
+  string action = 3;
+  string details = 4;
+  string created_at = 5;
+} 
