@@ -14,6 +14,7 @@ import { PrismaService } from './prisma.service';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { SecurityMiddleware } from './security.middleware';
 import { TransactionsModule } from './transactions/transactions.module';
+import { DisputesModule } from './disputes/disputes.module';
 
 
 
@@ -35,7 +36,7 @@ import { TransactionsModule } from './transactions/transactions.module';
     UsersModule, AuthModule, 
     DealsModule, P2pModule, 
     NotificationsModule, GarantModule, 
-    LogsModule, SettingsModule, TransactionsModule
+    LogsModule, SettingsModule, TransactionsModule, DisputesModule
   ],
   controllers: [],
   providers: [
